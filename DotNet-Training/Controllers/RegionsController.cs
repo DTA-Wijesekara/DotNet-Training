@@ -48,13 +48,25 @@ namespace DotNet_Training.Controllers
         public IActionResult Getbyid([FromRoute]Guid id)
         {
             //var regionz = dbContext.Region.Find(id);
+
+            //GET region domain model from database
             var regionz = dbContext.Region.FirstOrDefault(x => x.Id == id);
 
             if(regionz == null)
             {
                 return NotFound();
             }
-            return Ok(regionz);
+            //map region domain model to region DTO
+            var regionDto = new RegionDTO()
+            {
+                Id = regionz.Id,
+                Code = regionz.Code,
+                Name = regionz.Name,
+                RegionImageUrl = regionz.RegionImageUrl
+            };
+
+            //return DTO back
+            return Ok(regionDto);
         }
     }
 }
