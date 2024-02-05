@@ -30,7 +30,9 @@ namespace DotNet_Training.Controllers
         [Route("{id:Guid}")] 
         public IActionResult Getbyid([FromRoute]Guid id)
         {
-            var regionz = dbContext.Region.Find(id);
+            //var regionz = dbContext.Region.Find(id);
+            var regionz = dbContext.Region.FirstOrDefault(x => x.Id == id);
+
             if(regionz == null)
             {
                 return NotFound();
