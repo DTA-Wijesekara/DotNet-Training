@@ -1,4 +1,5 @@
 ﻿using DotNet_Training.Context;
+using DotNet_Training.Models.Domains;
 using DotNet_Training.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +68,35 @@ namespace DotNet_Training.Controllers
 
             //return DTO back
             return Ok(regionDto);
+        }
+
+        //POST to create new region  
+        //POST: https://localhost:portnumber/api/regions
+        [HttpPost]
+        public IActionResult Create([FromBody] AddRegionRequestDto addRegionRequestDto)
+        {
+            //map DTO to domain model
+            var regionDomainModel = new Region
+            {
+                Code = addRegionRequestDto.Code,
+                Name = addRegionRequestDto.Name,
+                RegionImageUrl = addRegionRequestDto.RegionImageUrl,
+            };
+
+            //use domain model to create region
+            dbContext.Region.Add(regionDomainModel);
+            dbContext.SaveChanges();
+
+            //map domain model back to DTO
+            var regionDto = new RegionDTO()
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl,
+            };
+
+            return CreatedAtAction(nameof(Getbyid),new {id=regionDto.Id}, regionDto);
         }
     }
 }
