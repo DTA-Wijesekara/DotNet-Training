@@ -42,6 +42,7 @@ namespace DotNet_Training.Controllers
             return Ok(regionzDto);
         }
 
+
         //get by ID
         //GET: https://localhost:portnumber/api/regions/{id}
         [HttpGet]
@@ -70,13 +71,14 @@ namespace DotNet_Training.Controllers
             return Ok(regionDto);
         }
 
+
         //POST to create new region  
         //POST: https://localhost:portnumber/api/regions
         [HttpPost]
         public IActionResult Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
             //map DTO to domain model
-            var regionDomainModel = new Region
+            var regionDomainModel = new Region()
             {
                 Code = addRegionRequestDto.Code,
                 Name = addRegionRequestDto.Name,
@@ -97,6 +99,37 @@ namespace DotNet_Training.Controllers
             };
 
             return CreatedAtAction(nameof(Getbyid),new {id=regionDto.Id}, regionDto);
+        }
+
+
+        //Update region  
+        //PUT: https://localhost:portnumber/api/regions/{id}
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
+        {
+            //check if region exists
+            var regionDomainModel = dbContext.Region.FirstOrDefault(x => x.Id == id);
+            if (regionDomainModel == null)
+            {
+                return NotFound();
+            }
+            //map DTO to domain model
+            regionDomainModel.Name = updateRegionRequestDto.Name;
+            regionDomainModel.RegionImageUrl= updateRegionRequestDto.RegionImageUrl;
+
+            dbContext.SaveChanges();
+
+            //convert Domain Model to DTO
+            var regndto = new RegionDTO()
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl,
+            };
+
+            return Ok(regndto);
         }
     }
 }
