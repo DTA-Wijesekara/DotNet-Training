@@ -131,5 +131,34 @@ namespace DotNet_Training.Controllers
 
             return Ok(regndto);
         }
+
+        //Delete region  
+        //DELETE: https://localhost:portnumber/api/regions/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var regionDomainModel = dbContext.Region.FirstOrDefault(x => x.Id == id);
+            if(regionDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            //Delete region
+            dbContext.Region.Remove(regionDomainModel);
+            dbContext.SaveChanges();
+
+            //if needed , return deleted region 
+            //map domain model to dto
+            var regndto = new RegionDTO()
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl,
+            };
+
+            return Ok(regndto);
+        }
     }
 }
