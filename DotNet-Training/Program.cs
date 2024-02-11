@@ -1,4 +1,5 @@
 using DotNet_Training.Context;
+using DotNet_Training.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<dasunDbcontext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("dbstring")));
 
+//ape service folder eka nathnam Repository folder eka gana kiyala = dependency injection
+builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 
 var app = builder.Build();
 

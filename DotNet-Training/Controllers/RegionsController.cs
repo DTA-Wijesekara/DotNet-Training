@@ -1,6 +1,7 @@
 ﻿using DotNet_Training.Context;
 using DotNet_Training.Models.Domains;
 using DotNet_Training.Models.DTO;
+using DotNet_Training.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace DotNet_Training.Controllers
     public class RegionsController : ControllerBase
     {
         private readonly dasunDbcontext dbContext;
+        private readonly IRegionRepository regionRepository;
 
-        public RegionsController(dasunDbcontext dbContext)
+        public RegionsController(dasunDbcontext dbContext, IRegionRepository regionRepository)
         {
             this.dbContext = dbContext;
+            this.regionRepository = regionRepository;
         }
 
         //get all regios
@@ -23,8 +26,8 @@ namespace DotNet_Training.Controllers
         [HttpGet]
         public async Task<IActionResult> Getall()
         {
-            // get data from database - domain models
-            var regionz = await dbContext.Region.ToListAsync();
+            // get data from Repository folder
+            var regionz = await regionRepository.GetAllAsync();
 
             //map domain models to DTOs
             var regionzDto = new List<RegionDTO>();
