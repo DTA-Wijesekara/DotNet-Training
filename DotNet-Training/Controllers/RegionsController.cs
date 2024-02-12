@@ -56,7 +56,7 @@ namespace DotNet_Training.Controllers
             //var regionz = dbContext.Region.Find(id);
 
             //GET region domain model from database
-            var regionz = await dbContext.Region.FirstOrDefaultAsync(x => x.Id == id);
+            var regionz = await regionRepository.GetByIdAsync(id);
 
             if(regionz == null)
             {
@@ -90,8 +90,7 @@ namespace DotNet_Training.Controllers
             };
 
             //use domain model to create region
-            await dbContext.Region.AddAsync(regionDomainModel);
-            await dbContext.SaveChangesAsync();
+            regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
 
             //map domain model back to DTO
             var regionDto = new RegionDTO()
@@ -112,17 +111,19 @@ namespace DotNet_Training.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
-            //check if region exists
-            var regionDomainModel = await dbContext.Region.FirstOrDefaultAsync(x => x.Id == id);
+
+            var regionDomainModel = new Region
+            {
+                Name = updateRegionRequestDto.Name,
+                RegionImageUrl= updateRegionRequestDto.RegionImageUrl,
+            };
+
+            regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
+            
             if (regionDomainModel == null)
             {
                 return NotFound();
-            }
-            //map DTO to domain model
-            regionDomainModel.Name = updateRegionRequestDto.Name;
-            regionDomainModel.RegionImageUrl= updateRegionRequestDto.RegionImageUrl;
-
-            await dbContext.SaveChangesAsync();
+            };
 
             //convert Domain Model to DTO
             var regndto = new RegionDTO()
@@ -142,15 +143,11 @@ namespace DotNet_Training.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var regionDomainModel = await dbContext.Region.FirstOrDefaultAsync(x => x.Id == id);
+            var regionDomainModel = await regionRepository.DeleteAsync(id);
             if(regionDomainModel == null)
             {
                 return NotFound();
-            }
-
-            //Delete region
-            dbContext.Region.Remove(regionDomainModel); // remove is not having a async method
-            await dbContext.SaveChangesAsync();
+            };
 
             //if needed , return deleted region 
             //map domain model to dto
