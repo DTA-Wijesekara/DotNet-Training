@@ -16,12 +16,14 @@ namespace DotNet_Training.Controllers
         private readonly dasunDbcontext dbContext;
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<RegionsController> logger;
 
-        public RegionsController(dasunDbcontext dbContext, IRegionRepository regionRepository, IMapper mapper)
+        public RegionsController(dasunDbcontext dbContext, IRegionRepository regionRepository, IMapper mapper, ILogger<RegionsController> logger)
         {
             this.dbContext = dbContext;
             this.regionRepository = regionRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         //get all regios
@@ -29,6 +31,7 @@ namespace DotNet_Training.Controllers
         [HttpGet]
         public async Task<IActionResult> Getall()
         {
+            logger.LogInformation("GetAllRegions Methord was started");
             var regionz = await regionRepository.GetAllAsync();
             var regionzDto = mapper.Map<List<RegionDTO>>(regionz);
             return Ok(regionzDto);

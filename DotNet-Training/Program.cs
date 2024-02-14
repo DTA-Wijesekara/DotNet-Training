@@ -2,8 +2,16 @@ using DotNet_Training.Context;
 using DotNet_Training.Mappings;
 using DotNet_Training.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .MinimumLevel.Information()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger); 
 
 // Add services to the container.
 
