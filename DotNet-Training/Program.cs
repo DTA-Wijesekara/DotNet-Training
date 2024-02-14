@@ -1,4 +1,5 @@
 using DotNet_Training.Context;
+using DotNet_Training.Mappings;
 using DotNet_Training.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,8 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("dbstring")));
 
 //ape service folder eka nathnam Repository folder eka gana kiyala = dependency injection
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 var app = builder.Build();
 

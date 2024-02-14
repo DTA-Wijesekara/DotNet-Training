@@ -1,4 +1,5 @@
-﻿using DotNet_Training.Context;
+﻿using AutoMapper;
+using DotNet_Training.Context;
 using DotNet_Training.Models.Domains;
 using DotNet_Training.Models.DTO;
 using DotNet_Training.Repositories;
@@ -14,11 +15,13 @@ namespace DotNet_Training.Controllers
     {
         private readonly dasunDbcontext dbContext;
         private readonly IRegionRepository regionRepository;
+        private readonly IMapper mapper;
 
-        public RegionsController(dasunDbcontext dbContext, IRegionRepository regionRepository)
+        public RegionsController(dasunDbcontext dbContext, IRegionRepository regionRepository, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.regionRepository = regionRepository;
+            this.mapper = mapper;
         }
 
         //get all regios
@@ -26,23 +29,8 @@ namespace DotNet_Training.Controllers
         [HttpGet]
         public async Task<IActionResult> Getall()
         {
-            // get data from Repository folder
             var regionz = await regionRepository.GetAllAsync();
-
-            //map domain models to DTOs
-            var regionzDto = new List<RegionDTO>();
-            foreach (var region in regionz)
-            {
-                regionzDto.Add(new RegionDTO()
-                {
-                    Id= region.Id,
-                    Code= region.Code,
-                    Name= region.Name,
-                    RegionImageUrl= region.RegionImageUrl,
-                });
-            }
-
-            //return DTOs
+            var regionzDto = mapper.Map<List<RegionDTO>>(regionz);
             return Ok(regionzDto);
         }
 
@@ -53,25 +41,12 @@ namespace DotNet_Training.Controllers
         [Route("{id:Guid}")] 
         public async Task<IActionResult> Getbyid([FromRoute]Guid id)
         {
-            //var regionz = dbContext.Region.Find(id);
-
-            //GET region domain model from database
             var regionz = await regionRepository.GetByIdAsync(id);
-
             if(regionz == null)
             {
                 return NotFound();
             }
-            //map region domain model to region DTO
-            var regionDto = new RegionDTO()
-            {
-                Id = regionz.Id,
-                Code = regionz.Code,
-                Name = regionz.Name,
-                RegionImageUrl = regionz.RegionImageUrl
-            };
-
-            //return DTO back
+            var regionDto = mapper.Map<RegionDTO>(regionz);
             return Ok(regionDto);
         }
 
@@ -81,26 +56,9 @@ namespace DotNet_Training.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-            //map DTO to domain model
-            var regionDomainModel = new Region() //methana region walinma karanna ona api dbcontext eke kiyala thiyenawane database ekata api danne region type eke oblect kiyala
-            {
-                Code = addRegionRequestDto.Code,
-                Name = addRegionRequestDto.Name,
-                RegionImageUrl = addRegionRequestDto.RegionImageUrl,
-            };
-
-            //use domain model to create region
+            var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
             regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
-
-            //map domain model back to DTO
-            var regionDto = new RegionDTO()
-            {
-                Id = regionDomainModel.Id,
-                Code = regionDomainModel.Code,
-                Name = regionDomainModel.Name,
-                RegionImageUrl = regionDomainModel.RegionImageUrl,
-            };
-
+            var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
             return CreatedAtAction(nameof(Getbyid),new {id=regionDto.Id}, regionDto);
         }
 
@@ -111,29 +69,12 @@ namespace DotNet_Training.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
-
-            var regionDomainModel = new Region
-            {
-                Name = updateRegionRequestDto.Name,
-                RegionImageUrl= updateRegionRequestDto.RegionImageUrl,
-            };
-
-            regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
-            
+            var regionDomainModel = await regionRepository.UpdateAsync(id, updateRegionRequestDto);        
             if (regionDomainModel == null)
             {
                 return NotFound();
             };
-
-            //convert Domain Model to DTO
-            var regndto = new RegionDTO()
-            {
-                Id = regionDomainModel.Id,
-                Code = regionDomainModel.Code,
-                Name = regionDomainModel.Name,
-                RegionImageUrl = regionDomainModel.RegionImageUrl,
-            };
-
+            var regndto = mapper.Map<RegionDTO>(regionDomainModel);
             return Ok(regndto);
         }
 
@@ -148,17 +89,7 @@ namespace DotNet_Training.Controllers
             {
                 return NotFound();
             };
-
-            //if needed , return deleted region 
-            //map domain model to dto
-            var regndto = new RegionDTO()
-            {
-                Id = regionDomainModel.Id,
-                Code = regionDomainModel.Code,
-                Name = regionDomainModel.Name,
-                RegionImageUrl = regionDomainModel.RegionImageUrl,
-            };
-
+            var regndto = mapper.Map<RegionDTO>(regionDomainModel);
             return Ok(regndto);
         }
     }

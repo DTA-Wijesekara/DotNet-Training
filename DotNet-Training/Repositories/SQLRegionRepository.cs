@@ -1,5 +1,7 @@
-﻿using DotNet_Training.Context;
+﻿using AutoMapper;
+using DotNet_Training.Context;
 using DotNet_Training.Models.Domains;
+using DotNet_Training.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Training.Repositories
@@ -7,10 +9,12 @@ namespace DotNet_Training.Repositories
     public class SQLRegionRepository : IRegionRepository
     {
         private readonly dasunDbcontext _dbcontext;
+        private readonly IMapper mapper;
 
-        public SQLRegionRepository(dasunDbcontext dbcontext)
+        public SQLRegionRepository(dasunDbcontext dbcontext , IMapper mapper)
         {
             this._dbcontext = dbcontext;
+            this.mapper = mapper;
         }
 
         public async Task<Region> CreateAsync(Region region)
@@ -38,19 +42,22 @@ namespace DotNet_Training.Repositories
         }
         public async Task<Region> GetByIdAsync(Guid id)
         {
-            return await _dbcontext.Region.FirstOrDefaultAsync(x => x.Id == id);
+            var regg = await _dbcontext.Region.FirstOrDefaultAsync(x => x.Id == id);
+            if (regg == null)
+            {
+                return null;
+            }
+            return regg;
         }
 
-        public async Task<Region?> UpdateAsync(Guid id, Region region)
+        public async Task<Region?> UpdateAsync(Guid id, UpdateRegionRequestDto region)
         {
             var existingRegion = await _dbcontext.Region.FirstOrDefaultAsync(x => x.Id == id);
             if (existingRegion == null)
             {
                 return null;
             }
-            existingRegion.Code = region.Code;
-            existingRegion.Name = region.Name;
-
+            existingRegion = mapper.Map(region, existingRegion);
             await _dbcontext.SaveChangesAsync();
             return existingRegion;
         }
