@@ -16,6 +16,8 @@ namespace DotNet_Training.Mappings
             CreateMap<AddWalkDto,Walk>().ReverseMap();
             CreateMap<WalkDto,Walk>().ReverseMap();
             CreateMap<DifficultyDto,Difficulty>().ReverseMap();
+            CreateMap<UpdateWalkDto,Walk>().ReverseMap();
+            CreateMap<Walk,Walk>().ReverseMap();
 
         }
     }
