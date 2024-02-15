@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DotNet_Training.Context;
+using DotNet_Training.CustomActionFilters;
 using DotNet_Training.Models.Domains;
 using DotNet_Training.Models.DTO;
 using DotNet_Training.Repositories;
@@ -57,19 +58,13 @@ namespace DotNet_Training.Controllers
         //POST to create new region  
         //POST: https://localhost:portnumber/api/regions
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-            if(ModelState.IsValid)
-            {
                 var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
                 regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
                 var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
                 return CreatedAtAction(nameof(Getbyid), new { id = regionDto.Id }, regionDto);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
         }
 
 
