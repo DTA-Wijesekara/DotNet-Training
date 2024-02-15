@@ -30,7 +30,7 @@ namespace DotNet_Training.Controllers
         //GET: https://localhost:portnumber/api/regions
         [HttpGet]
         public async Task<IActionResult> Getall()
-        {
+        { 
             logger.LogInformation("GetAllRegions Methord was started");
             var regionz = await regionRepository.GetAllAsync();
             var regionzDto = mapper.Map<List<RegionDTO>>(regionz);

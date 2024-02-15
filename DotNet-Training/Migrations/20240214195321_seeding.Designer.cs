@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNet_Training.Migrations
 {
     [DbContext(typeof(dasunDbcontext))]
-    [Migration("20240205163228_Innitial Migration")]
-    partial class InnitialMigration
+    [Migration("20240214195321_seeding")]
+    partial class seeding
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,18 @@ namespace DotNet_Training.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Difficulties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("8206c0eb-c2c6-4060-99e6-f8d146ce7811"),
+                            Name = "dasun"
+                        },
+                        new
+                        {
+                            Id = new Guid("de2b23b6-ae35-49d4-b61c-ce151716114e"),
+                            Name = "dasun"
+                        });
                 });
 
             modelBuilder.Entity("DotNet_Training.Models.Domains.Region", b =>
