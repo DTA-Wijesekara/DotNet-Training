@@ -59,10 +59,17 @@ namespace DotNet_Training.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-            var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
-            regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
-            var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
-            return CreatedAtAction(nameof(Getbyid),new {id=regionDto.Id}, regionDto);
+            if(ModelState.IsValid)
+            {
+                var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
+                regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
+                var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
+                return CreatedAtAction(nameof(Getbyid), new { id = regionDto.Id }, regionDto);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
 
