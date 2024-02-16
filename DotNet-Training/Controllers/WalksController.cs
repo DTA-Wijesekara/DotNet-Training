@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DotNet_Training.CustomActionFilters;
 using DotNet_Training.Models.Domains;
 using DotNet_Training.Models.DTO;
 using DotNet_Training.Models.DTO.walksDtos;
@@ -22,6 +23,7 @@ namespace DotNet_Training.Controllers
             this.walkRepository = walkRepository;
         }
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkDto addWalkDto)
         {
             var WalkDomainModel = mapper.Map<Walk>(addWalkDto);
@@ -47,6 +49,7 @@ namespace DotNet_Training.Controllers
         }
         [HttpPut]
         [Route("{id:guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateWalkDto WalkDto)
         {
             var www = mapper.Map<Walk>(WalkDto);

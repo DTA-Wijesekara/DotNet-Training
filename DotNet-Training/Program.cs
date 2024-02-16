@@ -3,14 +3,17 @@ using DotNet_Training.Mappings;
 using DotNet_Training.Repositories;
 using DotNet_Training.Repositories.DifficultyServices;
 using DotNet_Training.Repositories.WalkServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("Logs/Training_Log.txt", rollingInterval: RollingInterval.Minute )
+    .WriteTo.File("Logs/Training_Log.txt", rollingInterval: RollingInterval.Day )
     .MinimumLevel.Information()
     .CreateLogger();
 builder.Logging.ClearProviders();
@@ -33,6 +36,21 @@ builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +61,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
