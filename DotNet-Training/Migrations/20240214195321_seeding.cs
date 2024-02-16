@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DotNet_Training.Migrations
 {
     /// <inheritdoc />
-    public partial class InnitialMigration : Migration
+    public partial class seeding : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,6 +66,15 @@ namespace DotNet_Training.Migrations
                         principalTable: "Region",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Difficulties",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("8206c0eb-c2c6-4060-99e6-f8d146ce7811"), "dasun" },
+                    { new Guid("de2b23b6-ae35-49d4-b61c-ce151716114e"), "dasun" }
                 });
 
             migrationBuilder.CreateIndex(
