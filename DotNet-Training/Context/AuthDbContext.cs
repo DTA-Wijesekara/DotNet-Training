@@ -13,8 +13,8 @@ namespace DotNet_Training.Context
         {
             base.OnModelCreating(builder);
 
-            var readerRoleId = "";
-            var writerRoleId = "";
+            var readerRoleId = "1";
+            var writerRoleId = "2";
 
             var roles = new List<IdentityRole>
             {
