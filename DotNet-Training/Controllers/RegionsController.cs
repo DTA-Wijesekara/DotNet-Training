@@ -4,6 +4,7 @@ using DotNet_Training.CustomActionFilters;
 using DotNet_Training.Models.Domains;
 using DotNet_Training.Models.DTO;
 using DotNet_Training.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace DotNet_Training.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegionsController : ControllerBase
     {
         private readonly dasunDbcontext dbContext;
