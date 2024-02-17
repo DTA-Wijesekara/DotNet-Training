@@ -39,5 +39,23 @@ namespace DotNet_Training.Controllers
             }
             return BadRequest("Something went Wrong");
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        {
+            var user = await userManager.FindByEmailAsync(loginRequestDto.UserName);
+            if (user != null)
+            {
+                var checkPassword = await userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+                if (checkPassword)
+                {
+                    //Create token
+
+                    return Ok();
+                }
+            }
+            return BadRequest("Username or password incorrect");
+        }
     }
 }
