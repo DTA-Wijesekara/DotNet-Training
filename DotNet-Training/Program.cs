@@ -29,6 +29,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<dasunDbcontext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("dbstring")));
 
+builder.Services.AddDbContext<AuthDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("dbstringAuth")));
+
 //ape service folder eka nathnam Repository folder eka gana kiyala = dependency injection
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();

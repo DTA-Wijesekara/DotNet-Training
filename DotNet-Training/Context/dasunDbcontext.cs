@@ -5,7 +5,7 @@ namespace DotNet_Training.Context
 {
     public class dasunDbcontext : DbContext
     {
-        public dasunDbcontext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public dasunDbcontext(DbContextOptions<dasunDbcontext> dbContextOptions) : base(dbContextOptions)
         {
 
         }
