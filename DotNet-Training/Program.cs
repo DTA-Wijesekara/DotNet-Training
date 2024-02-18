@@ -9,6 +9,7 @@ using Serilog;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using DotNet_Training.Repositories.AuthRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("dbstringAuth")))
 //ape service folder eka nathnam Repository folder eka gana kiyala = dependency injection
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+
+
 //builder.Services.AddScoped<IDifficultyRepository, SQLDifficultyRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));

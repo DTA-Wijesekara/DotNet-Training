@@ -29,8 +29,8 @@ namespace DotNet_Training.Repositories.AuthRepository
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                configuration["Jwt;Issuer"],
-                configuration["Jwt;Audience"],
+                configuration["Jwt:Issuer"],
+                configuration["Jwt:Audience"],
                 claims,
                 expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: credentials);
