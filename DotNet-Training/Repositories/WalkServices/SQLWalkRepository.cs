@@ -33,7 +33,7 @@ namespace DotNet_Training.Repositories.WalkServices
             return existingRegion;
         }
 
-        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true)
         {
             var ww = dasunDbcontext.Walks.Include("Region").Include("Difficulty").AsQueryable();
             if (string.IsNullOrWhiteSpace(filterOn)==false && string.IsNullOrWhiteSpace(filterQuery) == false)
@@ -41,6 +41,13 @@ namespace DotNet_Training.Repositories.WalkServices
                 if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
                     ww = ww.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    ww = isAscending ? ww.OrderBy(x => x.Name) : ww.OrderByDescending(x => x.Name);
                 }
             }
             return await ww.ToListAsync();
