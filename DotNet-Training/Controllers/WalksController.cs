@@ -31,9 +31,9 @@ namespace DotNet_Training.Controllers
             return Ok(mapper.Map<WalkDto>(WalkDomainModel));
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn , [FromQuery] string? filterQuery)
         {
-            var WalkDomainModel =await walkRepository.GetAllAsync();
+            var WalkDomainModel =await walkRepository.GetAllAsync(filterOn, filterQuery);
             return Ok(mapper.Map<List<WalkDto>>(WalkDomainModel));
         }
         [HttpGet]

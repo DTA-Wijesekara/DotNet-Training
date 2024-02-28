@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace DotNet_Training.Context
 {
@@ -13,8 +14,8 @@ namespace DotNet_Training.Context
         {
             base.OnModelCreating(builder);
 
-            var readerRoleId = "1";
-            var writerRoleId = "2";
+            var readerRoleId = "e5a00264-e2a2-4c67-a568-70f48d9aa34f";
+            var writerRoleId = "30415502-99f1-49cc-95b3-d0081b0e638f";
 
             var roles = new List<IdentityRole>
             {
@@ -22,14 +23,14 @@ namespace DotNet_Training.Context
                 {
                     Id = readerRoleId,
                     ConcurrencyStamp = readerRoleId,
-                    Name = readerRoleId,
+                    Name = "Reader",
                     NormalizedName = "Reader".ToUpper(),
                 },
                 new IdentityRole
                 {
                     Id = writerRoleId,
                     ConcurrencyStamp = writerRoleId,
-                    Name = writerRoleId,
+                    Name = "Writer",
                     NormalizedName = "Writer".ToUpper(),
                 }
             };
