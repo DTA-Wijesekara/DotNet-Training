@@ -31,9 +31,12 @@ namespace DotNet_Training.Controllers
             return Ok(mapper.Map<WalkDto>(WalkDomainModel));
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? filterOn , [FromQuery] string? filterQuery , [FromQuery] string? sortBy , [FromQuery] bool? isAscending)
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string? filterOn , [FromQuery] string? filterQuery , 
+            [FromQuery] string? sortBy , [FromQuery] bool? isAscending ,
+            [FromQuery] int pageNumber = 1 , [FromQuery] int pageSize = 100)
         {
-            var WalkDomainModel =await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true);
+            var WalkDomainModel =await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
             return Ok(mapper.Map<List<WalkDto>>(WalkDomainModel));
         }
         [HttpGet]

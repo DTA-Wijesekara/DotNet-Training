@@ -33,7 +33,10 @@ namespace DotNet_Training.Repositories.WalkServices
             return existingRegion;
         }
 
-        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true)
+        public async Task<List<Walk>> GetAllAsync(
+            string? filterOn = null, string? filterQuery = null,
+            string? sortBy = null, bool isAscending = true,
+            int pageNumber = 1, int pageSize = 100)
         {
             var ww = dasunDbcontext.Walks.Include("Region").Include("Difficulty").AsQueryable();
             if (string.IsNullOrWhiteSpace(filterOn)==false && string.IsNullOrWhiteSpace(filterQuery) == false)
@@ -50,7 +53,10 @@ namespace DotNet_Training.Repositories.WalkServices
                     ww = isAscending ? ww.OrderBy(x => x.Name) : ww.OrderByDescending(x => x.Name);
                 }
             }
-            return await ww.ToListAsync();
+
+            var skipResult = (pageNumber - 1) * pageSize;
+
+            return await ww.Skip(skipResult).Take(pageSize).ToListAsync();
             //return await dasunDbcontext.Walks.Include("Region").Include("Difficulty").ToListAsync();
         }
 
